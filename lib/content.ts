@@ -11,14 +11,54 @@ export const profile = {
   intro:
     "I build AI systems that stay cheap, reliable and explainable: retrieval that answers in milliseconds, import pipelines that try free routes before paid ones, and context layers that keep several AI agents working from the same truth.",
   background:
-    "Background in software engineering and project management, including time at a YC incubator. For the past eight months I've been building AirBrew, a beverage discovery and recipe platform (\"Julienne for drinks\"), now live in beta, as a solo founder working with Claude Code, Cursor and Codex.",
+    "MS in Computer Science (Web & App Development) from Touro University, with earlier internships in blockchain analysis at Monday Capital and web development at Touro. For the past eight months I've been building AirBrew, a beverage discovery and recipe platform (\"Julienne for drinks\"), now live in beta, as a solo founder working with Claude Code, Cursor and Codex.",
   links: {
     github: "https://github.com/akbarhon-nyc",
-    email: "", // TODO: add your email to show a contact button
-    linkedin: "", // TODO: add your LinkedIn URL
-    resume: "", // TODO: add a resume link (PDF in /public or a hosted URL)
+    email: "akbarhon.toshkhujayev@gmail.com",
+    linkedin: "https://www.linkedin.com/in/akbarhon",
+    resume: "", // optional: add an updated resume (PDF in /public). Hidden while empty.
   },
 };
+
+export const experience = [
+  {
+    role: "Founder & AI Engineer",
+    org: "AirBrew",
+    when: "2026 – Present",
+    where: "New York",
+    points: [
+      "Solo-built a beverage discovery and recipe platform, live in beta (Next.js, Supabase, Python, Groq).",
+      "Designed a free-first import pipeline, a deterministic memory system for AI agents and a multi-agent context layer (case studies 01–04).",
+    ],
+  },
+  {
+    role: "Software Developer Intern (Blockchain)",
+    org: "Monday Capital",
+    when: "Nov 2022 – Dec 2023",
+    where: "New York",
+    points: [
+      "Analyzed smart contracts and off-chain transaction data for internal projects, informing decisions and risk management.",
+      "Researched metaverse platforms and NFT/blockchain startups, and presented findings to executives, developers and investors.",
+    ],
+  },
+  {
+    role: "Web Developer Assistant (Internship)",
+    org: "Touro University GST",
+    when: "Sep 2021 – Jul 2022",
+    where: "New York",
+    points: [
+      "Maintained the main website and departmental databases, with backend work in Python and PHP.",
+      "Led an SEO-friendly FAQ with structured data (+15% SEO rankings) and cut video hosting costs by $3,600 a year with HubSpot.",
+    ],
+  },
+];
+
+export const education = [
+  { degree: "MS, Computer Science (Web & App Development)", school: "Touro University Graduate School of Technology", when: "2020 – 2023" },
+  { degree: "Bachelor of Business Management (Hons)", school: "SEGi University, Kuala Lumpur", when: "2014 – 2017" },
+];
+
+export const courses = ["Harvard CS50 (2023)", "100 Days of Code: Python Pro Bootcamp (2024)", "HubSpot Digital Marketing (2022)"];
 
 export interface Metric {
   value: string;

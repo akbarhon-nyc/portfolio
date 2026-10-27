@@ -1,4 +1,4 @@
-import { benchRows, cases, profile, workflow, type CaseStudy, type Metric } from "@/lib/content";
+import { benchRows, cases, courses, education, experience, profile, workflow, type CaseStudy, type Metric } from "@/lib/content";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
 
@@ -197,6 +197,44 @@ export function AboutAnswer({ onAsk }: { onAsk: (q: string) => void }) {
         <p className="text-dim">{profile.background}</p>
       </Reveal>
       <Reveal i={2}>
+        <Label>Experience</Label>
+        <ol className="relative space-y-5 border-l border-line pl-6">
+          {experience.map((e, n) => (
+            <li key={e.org} className="relative">
+              <span className={`absolute -left-[29px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-bg ${n === 0 ? "bg-accent" : "bg-faint"}`} />
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                <span className="text-[14.5px] font-medium text-ink">
+                  {e.role} <span className="text-dim">· {e.org}</span>
+                </span>
+                <span className="font-mono text-[11px] text-faint">{e.when}</span>
+              </div>
+              <ul className="mt-1.5 space-y-1">
+                {e.points.map((pt) => (
+                  <li key={pt} className="text-[13.5px] leading-relaxed text-dim">{pt}</li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
+      <Reveal i={3} className="grid gap-3 sm:grid-cols-2">
+        <div className="rounded-xl border border-line bg-panel p-4">
+          <Label>Education</Label>
+          {education.map((ed) => (
+            <div key={ed.degree} className="mb-2.5 last:mb-0">
+              <div className="text-[13.5px] text-ink">{ed.degree}</div>
+              <div className="text-[12.5px] text-faint">{ed.school} · {ed.when}</div>
+            </div>
+          ))}
+        </div>
+        <div className="rounded-xl border border-line bg-panel p-4">
+          <Label>Courses</Label>
+          {courses.map((c) => (
+            <div key={c} className="mb-1.5 text-[13.5px] text-dim last:mb-0">{c}</div>
+          ))}
+        </div>
+      </Reveal>
+      <Reveal i={4}>
         <FollowUps items={[cases[0].prompt, "How do you work with AI?", "How can I contact Adam?"]} onAsk={onAsk} />
       </Reveal>
     </div>
@@ -229,7 +267,7 @@ export function ContactAnswer() {
   const l = profile.links;
   const items = [
     { label: "Email", href: l.email ? `mailto:${l.email}` : "", text: l.email },
-    { label: "LinkedIn", href: l.linkedin, text: "linkedin.com" },
+    { label: "LinkedIn", href: l.linkedin, text: l.linkedin.replace(/^https?:\/\/(www\.)?/, "") },
     { label: "GitHub", href: l.github, text: l.github.replace("https://", "") },
     { label: "Resume", href: l.resume, text: "Download PDF" },
   ];
@@ -242,7 +280,7 @@ export function ContactAnswer() {
         </p>
       </Reveal>
       <Reveal i={1} className="grid gap-2 sm:grid-cols-2">
-        {items.map((it) =>
+        {items.filter((it) => it.href).map((it) =>
           it.href ? (
             <a
               key={it.label}
