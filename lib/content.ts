@@ -11,7 +11,7 @@ export const profile = {
   intro:
     "I build AI systems that stay cheap, reliable and explainable: retrieval that answers in milliseconds, import pipelines that try free routes before paid ones, and context layers that keep several AI agents working from the same truth.",
   background:
-    "MS in Computer Science (Web & App Development) from Touro University, with earlier internships in blockchain analysis at Monday Capital and web development at Touro. For the past eight months I've been building AirBrew, a beverage discovery and recipe platform (\"Julienne for drinks\"), now live in beta, as a solo founder working with Claude Code, Cursor and Codex.",
+    "MS in Computer Science from Touro University, now completing an MS in Data Science at Monroe University. Before AI, I worked as a blockchain engineer analyst at Monday Capital and started out in business and finance roles. For the past eight months I've been building AirBrew, a beverage discovery and recipe platform (\"Julienne for drinks\"), now live in beta, as a solo founder working with Claude Code, Cursor and Codex.",
   links: {
     github: "https://github.com/akbarhon-nyc",
     email: "akbarhon.toshkhujayev@gmail.com",
@@ -32,13 +32,13 @@ export const experience = [
     ],
   },
   {
-    role: "Software Developer Intern (Blockchain)",
+    role: "Blockchain Engineer Analyst",
     org: "Monday Capital",
-    when: "Nov 2022 – Dec 2023",
+    when: "Nov 2023 – Dec 2024",
     where: "New York",
     points: [
       "Analyzed smart contracts and off-chain transaction data for internal projects, informing decisions and risk management.",
-      "Researched metaverse platforms and NFT/blockchain startups, and presented findings to executives, developers and investors.",
+      "Authored case studies on NFT and blockchain startups and metaverse platforms, and presented findings to executives, developers and investors.",
     ],
   },
   {
@@ -48,15 +48,28 @@ export const experience = [
     where: "New York",
     points: [
       "Maintained the main website and departmental databases, with backend work in Python and PHP.",
-      "Led an SEO-friendly FAQ with structured data (+15% SEO rankings) and cut video hosting costs by $3,600 a year with HubSpot.",
+      "Led a team of 5 to build an SEO-friendly FAQ with structured data (+15% SEO rankings) and cut video hosting costs by $3,600 a year with HubSpot.",
+    ],
+  },
+  {
+    role: "Business & finance roles",
+    org: "Earlier career",
+    when: "2014 – 2018",
+    where: "Uzbekistan · Malaysia",
+    points: [
+      "Business Development Manager at Empire Academy (Fergana): opened new markets and grew sales 25% in 3 months.",
+      "Internships in market research at Philips Malaysia Lighting and financial analysis at FA Advisory (Kuala Lumpur).",
     ],
   },
 ];
 
 export const education = [
+  { degree: "MS, Data Science (in progress)", school: "Monroe University", when: "2025 – 2027" },
   { degree: "MS, Computer Science (Web & App Development)", school: "Touro University Graduate School of Technology", when: "2020 – 2023" },
-  { degree: "Bachelor of Business Management (Hons)", school: "SEGi University, Kuala Lumpur", when: "2014 – 2017" },
+  { degree: "Bachelor of Business Management (Hons)", school: "Abertay University, studied at SEGi University, Kuala Lumpur", when: "2014 – 2017" },
 ];
+
+export const languages = ["English (professional)", "Russian (professional)", "Uzbek (native)"];
 
 export const courses = ["Harvard CS50 (2023)", "100 Days of Code: Python Pro Bootcamp (2024)", "HubSpot Digital Marketing (2022)"];
 

@@ -1,4 +1,4 @@
-import { benchRows, cases, courses, education, experience, profile, workflow, type CaseStudy, type Metric } from "@/lib/content";
+import { benchRows, cases, courses, education, languages, experience, profile, workflow, type CaseStudy, type Metric } from "@/lib/content";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
 
@@ -232,6 +232,12 @@ export function AboutAnswer({ onAsk }: { onAsk: (q: string) => void }) {
           {courses.map((c) => (
             <div key={c} className="mb-1.5 text-[13.5px] text-dim last:mb-0">{c}</div>
           ))}
+          <div className="mt-4"><Label>Languages</Label></div>
+          <div className="flex flex-wrap gap-1.5">
+            {languages.map((l) => (
+              <span key={l} className="rounded-full border border-line bg-raised px-2.5 py-1 text-[12px] text-dim">{l}</span>
+            ))}
+          </div>
         </div>
       </Reveal>
       <Reveal i={4}>
