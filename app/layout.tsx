@@ -3,7 +3,8 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "@fontsource-variable/fraunces";
 import "./globals.css";
-import NavDock, { THEME_KEY } from "@/components/NavDock";
+import NavDock from "@/components/NavDock";
+import { THEME_KEY } from "@/lib/theme";
 import { site } from "@/lib/config";
 
 export const metadata: Metadata = {

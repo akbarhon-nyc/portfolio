@@ -39,18 +39,12 @@ function start() {
   const headers = { apikey: readers.anonKey, Authorization: "Bearer " + readers.anonKey, "Content-Type": "application/json" };
   const id = readers.counterId;
 
-  const flag = "lr-seen:" + id;
-  let seen = false;
-  try {
-    seen = sessionStorage.getItem(flag) === "1";
-  } catch {}
-  fetch(base + "/rest/v1/rpc/" + (seen ? "reader_count" : "note_reader"), { method: "POST", headers, body: JSON.stringify({ p_id: id }) })
+  // Always note the reader: the database dedupes per IP per UTC day, so a tab
+  // left open overnight still counts the next day's visit.
+  fetch(base + "/rest/v1/rpc/note_reader", { method: "POST", headers, body: JSON.stringify({ p_id: id }) })
     .then((r) => (r.ok ? r.json() : null))
     .then((v) => {
       if (v == null) return;
-      try {
-        sessionStorage.setItem(flag, "1");
-      } catch {}
       const n = Number(v);
       if (!Number.isNaN(n) && (shared.total == null || n > shared.total)) {
         shared.total = n;

@@ -9,8 +9,9 @@ import { motion, AnimatePresence } from "framer-motion";
 // highlight, rolling link text, scroll progress ring, live New York clock,
 // light/dark toggle and a magnetic "Say hi".
 
+import { THEME_KEY } from "@/lib/theme";
+
 const EASE = [0.65, 0, 0.35, 1] as const;
-export const THEME_KEY = "theme";
 
 const ITEMS: { label: string; href: string; hideOnMobile?: boolean }[] = [
   { label: "Ask", href: "/#ask" },
