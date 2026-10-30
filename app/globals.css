@@ -209,3 +209,8 @@ body {
   .dot-grid { animation: none; }
   html { scroll-behavior: auto; }
 }
+
+/* Status dot in the footer pill: slow mirrored fade, like Marlowe's. */
+.footer-pulse { animation: footer-pulse 1s ease-in-out infinite alternate; }
+@keyframes footer-pulse { to { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .footer-pulse { animation: none; } }
