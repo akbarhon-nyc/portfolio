@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import "@fontsource-variable/fraunces";
 import "./globals.css";
 import NavDock from "@/components/NavDock";
+import SiteFooter from "@/components/SiteFooter";
 import { THEME_KEY } from "@/lib/theme";
 import { site } from "@/lib/config";
 
@@ -37,9 +38,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>
+      <body id="top">
         <NavDock />
         {children}
+        <SiteFooter />
       </body>
     </html>
   );
