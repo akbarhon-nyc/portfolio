@@ -192,37 +192,6 @@ export default function Home() {
           All tips →
         </Link>
       </Section>
-
-      {/* ---------------- contact ---------------- */}
-      <Section id="contact" className="lg:!pb-[72px]">
-        <Reveal>
-          <div className="t-label">(05) — Contact</div>
-        </Reveal>
-        <h2 className="t-h2 max-w-[720px] text-balance text-center text-ink">
-          Let’s talk about <span className="text-accent">AI engineering.</span>
-        </h2>
-        <p className="t-lead max-w-[560px] text-center">I’m open to AI engineering roles. Email is the fastest way to reach me.</p>
-        <div className="flex flex-wrap justify-center gap-2.5">
-          <a href={"mailto:" + profile.links.email} className="rounded-full bg-ink px-[22px] py-3 text-[14px] font-medium text-paper no-underline transition-transform hover:-translate-y-px">
-            Email me
-          </a>
-          <a href={profile.links.linkedin} target="_blank" rel="noreferrer" className="rounded-full border border-line px-[22px] py-3 text-[14px] font-medium text-ink no-underline transition-transform hover:-translate-y-px">
-            LinkedIn
-          </a>
-          <a href={profile.links.github} target="_blank" rel="noreferrer" className="rounded-full border border-line px-[22px] py-3 text-[14px] font-medium text-ink no-underline transition-transform hover:-translate-y-px">
-            GitHub
-          </a>
-          {profile.links.resume ? (
-            <a href={profile.links.resume} target="_blank" rel="noreferrer" className="rounded-full border border-line px-[22px] py-3 text-[14px] font-medium text-ink no-underline transition-transform hover:-translate-y-px">
-              Résumé
-            </a>
-          ) : null}
-        </div>
-        <footer className="flex flex-col items-center gap-4 pt-14">
-          <LiveReaders />
-          <p className="t-note text-center">© 2026 {profile.name} · {profile.location}</p>
-        </footer>
-      </Section>
     </main>
   );
 }
