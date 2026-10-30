@@ -16,7 +16,7 @@ adam.ai is the personal portfolio of Adam (Akbarhon) Toshkhujayev, an AI enginee
 A ChatGPT-style portfolio: visitors "ask" questions and get case studies back as answers. Routing is deterministic keyword scoring, the same idea as the second-brain retrieval tool in case study 01, so the site itself demonstrates the cheap, reliable, explainable AI systems Adam builds. A neighboring portfolio could copy the look of a chat, not the fact that the chat is the proof.
 
 ## Operating Context
-Single-page Next.js site deployed on Vercel. All copy lives in `lib/content.ts`. Deep links open an answer directly: `/#memory`, `/#pipeline`, `/#context`, `/#design`, `/#contact`.
+Next.js site deployed on Vercel at akbarhon.dev: a home page (hero chat, About, Experience, Tips, Contact) plus `/tips` and `/tips/[slug]`. Copy lives in `lib/content.ts`; tips are Markdown in `content/tips/`. Deep links open an answer directly: `/#memory`, `/#pipeline`, `/#context`, `/#design`. A live reader counter reads a small Supabase project (one visit per IP per day).
 
 ## Capabilities and Constraints
 - Chat-style "ask a question" interface is the core mechanism and must be preserved.

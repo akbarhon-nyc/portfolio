@@ -1,27 +1,45 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/inter";
-import "@fontsource/instrument-serif";
-import "@fontsource/instrument-serif/400-italic.css";
-import "@fontsource-variable/jetbrains-mono";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import "@fontsource-variable/fraunces";
 import "./globals.css";
+import NavDock, { THEME_KEY } from "@/components/NavDock";
+import { site } from "@/lib/config";
 
 export const metadata: Metadata = {
-  title: "Adam Toshkhujayev · AI Engineer",
-  description:
-    "Chat with Adam's portfolio: deterministic memory for AI agents, a free-first AI import pipeline, multi-agent context systems and AI-driven design systems.",
+  metadataBase: new URL(site.url),
+  title: { default: site.title, template: "%s · Adam Toshkhujayev" },
+  description: site.description,
   openGraph: {
-    title: "Adam Toshkhujayev · AI Engineer",
-    description: "Ask my portfolio anything. Case studies from building AirBrew with Claude, Cursor and Codex.",
+    title: site.title,
+    description: "Ask my portfolio anything. Case studies and tips from building AirBrew with Claude, Cursor and Codex.",
     type: "website",
+    url: site.url,
   },
 };
 
-export const viewport: Viewport = { themeColor: "#0d0d0e", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F4F2EE" },
+    { media: "(prefers-color-scheme: dark)", color: "#F4F2EE" },
+  ],
+};
+
+// Light by default; dark only when the visitor picked it with the toggle.
+const themeScript = `try{if(localStorage.getItem(${JSON.stringify(THEME_KEY)})==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body>
+        <NavDock />
+        {children}
+      </body>
     </html>
   );
 }
