@@ -16,7 +16,7 @@ adam.ai is the personal portfolio of Adam (Akbarhon) Toshkhujayev, an AI enginee
 A ChatGPT-style portfolio: visitors "ask" questions and get case studies back as answers. Routing is deterministic keyword scoring, the same idea as the second-brain retrieval tool in case study 01, so the site itself demonstrates the cheap, reliable, explainable AI systems Adam builds. A neighboring portfolio could copy the look of a chat, not the fact that the chat is the proof.
 
 ## Operating Context
-Next.js site deployed on Vercel at akbarhon.dev: a home page (hero chat, About, Experience, Tips, Contact) plus `/tips` and `/tips/[slug]`. Copy lives in `lib/content.ts`; tips are Markdown in `content/tips/`. Deep links open an answer directly: `/#memory`, `/#pipeline`, `/#context`, `/#design`. A live reader counter reads a small Supabase project (one visit per IP per day).
+Next.js site deployed on Vercel at akbarhon.dev: a home page (hero chat, About, Experience, Tips, Contact) plus `/tips` and `/tips/[slug]`. Copy lives in `lib/content.ts`; tips are Markdown in `content/tips/`. Deep links open an answer directly: `/#memory`, `/#pipeline`, `/#context`, `/#design`, `/#bubukay`. A live reader counter reads a small Supabase project (one visit per IP per day).
 
 ## Capabilities and Constraints
 - Chat-style "ask a question" interface is the core mechanism and must be preserved.
@@ -29,7 +29,7 @@ Next.js site deployed on Vercel at akbarhon.dev: a home page (hero chat, About, 
 Name: Adam (Akbarhon) Toshkhujayev. Role line: "AI Engineer · Solo founder of AirBrew". Voice in existing copy is plain, first person, and concrete about cost, reliability and explainability.
 
 ## Evidence on Hand
-Four case studies (01 to 04) covering a deterministic memory system for AI agents, a free-first import pipeline, a multi-agent context layer and AirBrew's design. Experience, education, languages and courses are in `lib/content.ts`. Live product: AirBrew, in beta. Several metrics are not yet measured; do not fabricate them. No testimonials or press on hand.
+Five case studies (01 to 05) covering a deterministic memory system for AI agents, a free-first import pipeline, a multi-agent context layer, AirBrew's design and Bubukay, a deterministic recipe extractor with a live in-chat demo that calls its public API. Experience, education, languages and courses are in `lib/content.ts`. Live product: AirBrew, in beta. Several metrics are not yet measured; do not fabricate them. No testimonials or press on hand.
 
 ## Product Principles
 1. The site demonstrates the work: the interface is evidence of the engineering, not decoration around it.

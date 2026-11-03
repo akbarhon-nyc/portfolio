@@ -50,7 +50,7 @@ npm run build    # production build
 
 ## Deep links
 
-`/#memory`, `/#pipeline`, `/#context` and `/#design` open that answer in the chat. `/#about`, `/#experience`, `/#tips` and `/#contact` scroll to the section.
+`/#memory`, `/#pipeline`, `/#context`, `/#design` and `/#bubukay` open that answer in the chat. `/#about`, `/#experience`, `/#tips` and `/#contact` scroll to the section.
 
 ## Deploy
 
