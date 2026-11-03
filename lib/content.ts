@@ -11,7 +11,7 @@ export const profile = {
   intro:
     "I build AI systems that stay cheap, reliable and explainable: retrieval that answers in milliseconds, import pipelines that try free routes before paid ones, and context layers that keep several AI agents working from the same truth.",
   background:
-    "MS in Computer Science from Touro University, now completing an MS in Data Science at Monroe University. Before AI, I worked as a blockchain engineer analyst at Monday Capital and started out in business and finance roles. For the past eight months I've been building AirBrew, a beverage discovery and recipe platform (\"Julienne for drinks\"), now live in beta, as a solo founder working with Claude Code, Cursor and Codex.",
+    "MS in Computer Science from Touro University, now completing an MS in Data Science at Monroe University. Before AI, I worked as a blockchain engineer analyst at Monday Capital and started out in business and finance roles. For the past eight months I've been building AirBrew, a beverage discovery and recipe platform (\"Save any drink you see online. Make it tonight with what you have.\"), now live in beta, as a solo founder working with Claude Code, Cursor and Codex.",
   links: {
     github: "https://github.com/akbarhon-nyc",
     email: "akbarhon.toshkhujayev@gmail.com",
@@ -100,6 +100,7 @@ export interface CaseStudy {
   code?: { file: string; body: string };
   lessons: string[];
   bench?: boolean;
+  demo?: { endpoint: string; site: string; examples: { label: string; url: string }[] };
 }
 
 export const cases: CaseStudy[] = [
@@ -273,6 +274,63 @@ NEVER   change a (LOCKED) decision without a new ADR`,
     lessons: [
       "AI is great at following rules and bad at inferring taste, so write the taste down as rules.",
       "Recording superseded designs stops agents from 'helpfully' resurrecting old ones.",
+    ],
+  },
+  {
+    id: "bubukay",
+    index: "05",
+    title: "Bubukay: paste a recipe link, get clean structured data",
+    short: "Bubukay, try it live",
+    prompt: "Let me try Bubukay",
+    keywords: ["bubukay", "try", "demo", "live", "play", "playground", "extract", "extraction", "extractor", "json", "jsonld", "deterministic", "confidence", "ingredient", "ingredients", "units", "api", "blog", "fun", "app"],
+    tagline:
+      "A recipe extractor with no AI in the loop. Paste a recipe blog link below and watch it return title, ingredients with real units, steps and a confidence score.",
+    problem:
+      "Recipe blogs bury the recipe under life stories and ads, and every site marks it up differently. LLM extraction is easy to bolt on but it guesses: invented quantities, merged steps, and no way to tell a good result from a bad one.",
+    solution:
+      "A deterministic pipeline that reads the structure sites already publish, scores how much to trust what it found, and fails loudly with a named reason instead of guessing. It runs as a public API and as an installable app for home cooks and drink makers.",
+    steps: [
+      { title: "Check before fetching", detail: "Validates the URL, rejects social, video and paywalled sources up front, and respects robots.txt and per-host rate limits. No logins, no hidden APIs." },
+      { title: "Structure first", detail: "JSON-LD (schema.org/Recipe) → microdata → HTML heuristics with per-site overrides. The first method that yields a real recipe wins." },
+      { title: "Hard success rule", detail: "At least 2 ingredients and 2 instructions, or it is not a recipe. Anything less returns a structured error, never a half-guess." },
+      { title: "Confidence you can read", detail: "Every result carries a 0–1 score and a high / medium / low level based on how it was extracted, so a client knows when to ask the user to check." },
+      { title: "Ingredients become data", detail: "Each line is parsed into a canonical ingredient, quantity and unit, then normalized to ml or g. Drink units are built in: a shot is 30 ml, a pump 10 ml, a doppio 60 ml." },
+      { title: "When a site blocks bots", detail: "Some sites refuse servers. Bubukay says so plainly and accepts the pasted page source instead, with no outbound request." },
+    ],
+    tools: ["Next.js", "TypeScript", "Convex", "cheerio", "Vitest", "PWA (offline + share target)", "Vercel"],
+    metrics: [
+      { value: "0", label: "LLM calls: every field comes from the page itself" },
+      { value: "228", label: "automated Vitest tests" },
+      { value: "23", label: "named failure reasons instead of a generic error" },
+      { value: "3", label: "extraction methods, tried in a fixed order" },
+    ],
+    demo: {
+      endpoint: "https://bubukay-api.vercel.app/api/extract",
+      site: "https://bubukay-api.vercel.app",
+      examples: [
+        { label: "Chai latte", url: "https://www.acouplecooks.com/chai-latte/" },
+        { label: "Matcha latte", url: "https://www.acouplecooks.com/matcha-latte/" },
+        { label: "Iced matcha", url: "https://www.loveandlemons.com/iced-matcha-latte/" },
+      ],
+    },
+    code: {
+      file: "POST /api/extract: the response, trimmed",
+      body: `{
+  "title": "Matcha Latte",
+  "confidenceLevel": "high",            // jsonld beat microdata and html
+  "source": { "method": "jsonld" },
+  "ingredientsStructured": [{
+    "raw": "1 teaspoon matcha powder",
+    "ingredient": { "canonicalName": "matcha" },
+    "normalizedQuantity": { "value": 5, "baseUnit": "ml" }
+  }]
+}`,
+    },
+    lessons: [
+      "A strict definition of success (2 ingredients, 2 steps) did more for quality than any clever parsing.",
+      "Saying \"this site blocks bots, paste the source\" beats a vague failure. Users fix what they understand.",
+      "Bubukay's deterministic extractor later became the first stage of AirBrew's import pipeline (case study 02).",
+      "Then I made it fun: brew mode, serving scaler, share cards for Instagram stories, and an installable app.",
     ],
   },
 ];

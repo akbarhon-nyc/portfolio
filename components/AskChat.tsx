@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { cases, education, experience, languages, courses, profile, workflow, type CaseStudy } from "@/lib/content";
@@ -13,7 +13,7 @@ import type { TipMeta } from "@/lib/tips";
    No LLM, no API key.
    ============================================================ */
 
-type CaseKey = "memory" | "pipeline" | "context" | "design";
+type CaseKey = "memory" | "pipeline" | "context" | "design" | "bubukay";
 type Key = CaseKey | "about" | "workflow" | "contact" | "tips" | "tip" | "fallback";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -24,6 +24,7 @@ const SUBS: Record<CaseKey, string> = {
   pipeline: "Free routes first, paid last",
   context: "One source of truth, 3 tools",
   design: "Taste turned into rules",
+  bubukay: "Paste a recipe link, see it parsed live",
 };
 
 const caseByKey = (k: string) => cases.find((c) => c.id === k);
@@ -33,6 +34,7 @@ const PROMPTS: Record<Key, string> = {
   pipeline: caseByKey("pipeline")!.prompt,
   context: caseByKey("context")!.prompt,
   design: caseByKey("design")!.prompt,
+  bubukay: caseByKey("bubukay")!.prompt,
   about: "Who is Adam?",
   workflow: "How do you work with AI?",
   contact: "How can I contact Adam?",
@@ -46,6 +48,7 @@ const FILES: Record<Key, string> = {
   pipeline: "case_02.md",
   context: "case_03.md",
   design: "case_04.md",
+  bubukay: "case_05.md",
   about: "about.md",
   workflow: "workflow.md",
   contact: "contact.md",
@@ -67,6 +70,7 @@ const NEXT: Record<Key, Key[]> = {
   pipeline: ["memory", "design"],
   context: ["memory", "workflow"],
   design: ["context", "contact"],
+  bubukay: ["pipeline", "contact"],
   about: ["workflow", "contact"],
   workflow: ["memory", "about"],
   contact: ["about", "memory"],
@@ -182,6 +186,183 @@ function Avatar() {
 const body = "m-0 text-[15px] leading-[1.6] tracking-[-0.005em] text-soft";
 const strong = "m-0 text-[14px] font-medium leading-[1.4] text-ink";
 
+/* ---------------- live demo (case study with `demo`) ---------------- */
+
+interface DemoIngredient {
+  raw: string;
+  ingredient?: { canonicalName?: string } | null;
+  normalizedQuantity?: { value: number; baseUnit: string } | null;
+}
+
+interface DemoRecipe {
+  title: string;
+  ingredients: string[];
+  instructions: string[];
+  yield: string | null;
+  confidenceScore: number;
+  confidenceLevel: "high" | "medium" | "low";
+  source: { url: string; method: string };
+  ingredientsStructured?: DemoIngredient[];
+}
+
+type DemoState =
+  | { status: "idle" }
+  | { status: "loading"; url: string }
+  | { status: "done"; recipe: DemoRecipe; ms: number }
+  | { status: "error"; message: string; reason?: string };
+
+const METHOD_LABEL: Record<string, string> = { jsonld: "JSON-LD", microdata: "Microdata", html: "HTML heuristics" };
+
+function fmtQty(n: number) {
+  return Number.isInteger(n) ? String(n) : n.toFixed(1).replace(/\.0$/, "");
+}
+
+function ExtractDemo({ demo }: { demo: NonNullable<CaseStudy["demo"]> }) {
+  const inputId = useId();
+  const [url, setUrl] = useState("");
+  const [state, setState] = useState<DemoState>({ status: "idle" });
+
+  async function run(target: string) {
+    const u = target.trim();
+    if (!u || state.status === "loading") return;
+    setUrl(u);
+    setState({ status: "loading", url: u });
+    const t0 = performance.now();
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25000);
+    try {
+      const res = await fetch(demo.endpoint, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ url: u }),
+        signal: ctrl.signal,
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setState({ status: "error", message: data.error?.message || "Bubukay couldn’t read that page.", reason: data.error?.reason });
+      } else {
+        setState({ status: "done", recipe: data as DemoRecipe, ms: performance.now() - t0 });
+      }
+    } catch (err) {
+      const aborted = err instanceof DOMException && err.name === "AbortError";
+      setState({ status: "error", message: aborted ? "That page took longer than 25 seconds. Try another link." : "Couldn’t reach Bubukay right now. Try again in a moment." });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  const loading = state.status === "loading";
+  const openHref = (u: string, t = "") => `${demo.site}/r?u=${encodeURIComponent(u)}${t ? "&t=" + encodeURIComponent(t) : ""}`;
+
+  return (
+    <div className="flex flex-col gap-4 rounded-[20px] border border-dashed border-accent p-4 sm:p-6">
+      <div className="flex flex-col gap-1.5">
+        <Label accent>Try it live</Label>
+        <p className={body}>Paste a recipe blog link, or pick an example. This calls the real Bubukay API.</p>
+      </div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          run(url);
+        }}
+        className="flex flex-wrap gap-2"
+      >
+        <label htmlFor={inputId} className="sr-only">
+          Recipe link
+        </label>
+        <input
+          id={inputId}
+          type="url"
+          inputMode="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://a-recipe-blog.com/iced-latte/"
+          className="min-w-0 flex-[1_1_220px] rounded-full border border-line bg-paper px-4 py-2.5 text-[15px] text-ink outline-none placeholder:text-soft focus-visible:border-accent"
+        />
+        <button
+          type="submit"
+          disabled={loading || !url.trim()}
+          className="cursor-pointer rounded-full bg-ink px-[18px] py-2.5 text-[14px] font-medium text-paper transition-opacity disabled:cursor-default disabled:opacity-40"
+        >
+          {loading ? "Reading…" : "Extract"}
+        </button>
+      </form>
+      <div className="flex flex-wrap gap-2">
+        {demo.examples.map((x) => (
+          <Pill key={x.url} outline onClick={() => run(x.url)}>
+            <span className="text-accent">↳</span> {x.label}
+          </Pill>
+        ))}
+      </div>
+
+      <div aria-live="polite" className="flex flex-col gap-3">
+        {state.status === "loading" ? (
+          <div className="inset-card flex items-center gap-3 px-[18px] py-4">
+            <Spark spinning />
+            <p className={body}>Fetching the page and reading its recipe markup…</p>
+          </div>
+        ) : null}
+
+        {state.status === "error" ? (
+          <div className="inset-card flex flex-col gap-1.5 px-[18px] py-4">
+            {state.reason ? <span className="t-note">{state.reason}</span> : null}
+            <p className={strong}>{state.message}</p>
+          </div>
+        ) : null}
+
+        {state.status === "done" ? (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE }} className="tray flex flex-col gap-1.5">
+            <div className="inset-card flex flex-col gap-3 p-4 sm:p-[22px]">
+              <div className="flex flex-wrap items-center gap-2">
+                <Pill>{state.recipe.confidenceLevel} confidence · {Math.round(state.recipe.confidenceScore * 100)}%</Pill>
+                <Pill>{METHOD_LABEL[state.recipe.source.method] || state.recipe.source.method}</Pill>
+                <span className="t-note">{Math.round(state.ms)} ms</span>
+              </div>
+              <div className="font-serif text-[24px] leading-[1.15] tracking-[-0.02em] text-ink">{state.recipe.title}</div>
+              {state.recipe.yield ? <p className={body}>{/^\d+$/.test(state.recipe.yield.trim()) ? `Serves ${state.recipe.yield.trim()}` : state.recipe.yield}</p> : null}
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              <div className="inset-card flex min-w-0 flex-[1_1_240px] flex-col gap-2.5 p-4 sm:p-[22px]">
+                <Label>Ingredients, parsed</Label>
+                {(state.recipe.ingredientsStructured?.length
+                  ? state.recipe.ingredientsStructured
+                  : state.recipe.ingredients.map((raw) => ({ raw }) as DemoIngredient)
+                ).map((g, i) => (
+                  <div key={i} className="flex flex-col gap-0.5 border-b border-line pb-2 last:border-none last:pb-0">
+                    <p className={strong}>
+                      {g.ingredient?.canonicalName || g.raw}
+                      {g.normalizedQuantity ? <span className="text-accent"> · {fmtQty(g.normalizedQuantity.value)} {g.normalizedQuantity.baseUnit}</span> : null}
+                    </p>
+                    {g.ingredient?.canonicalName ? <p className="m-0 text-[13px] leading-[1.45] text-soft">{g.raw}</p> : null}
+                  </div>
+                ))}
+              </div>
+              <div className="inset-card flex min-w-0 flex-[1_1_240px] flex-col gap-2.5 p-4 sm:p-[22px]">
+                <Label>Steps</Label>
+                {state.recipe.instructions.map((s, i) => (
+                  <div key={i} className="flex gap-3">
+                    <span className="t-note w-5 flex-none pt-0.5">{i + 1}</span>
+                    <p className={body}>{s}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+      </div>
+
+      <a
+        href={state.status === "done" ? openHref(state.recipe.source.url, state.recipe.title) : demo.site}
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex w-fit items-center gap-2 rounded-full border border-line bg-paper px-[18px] py-[11px] text-[14px] font-medium text-ink no-underline transition-transform hover:-translate-y-px"
+      >
+        {state.status === "done" ? "Open it in Bubukay: brew mode, scaler, share card ↗" : "Open the Bubukay app ↗"}
+      </a>
+    </div>
+  );
+}
+
 /* ---------------- answers ---------------- */
 
 interface Answer {
@@ -204,6 +385,7 @@ function caseAnswer(c: CaseStudy, followUps: ReactNode): Answer {
           </div>
         ))}
       </div>,
+      c.demo ? <ExtractDemo key="demo" demo={c.demo} /> : <span key="demo" />,
       <Label key="hl">How it works</Label>,
       ...c.steps.map((s, i) => (
         <div key={"s" + i} className="flex gap-4 border-b border-line pb-4">
@@ -714,6 +896,7 @@ export default function AskChat({ tips: tipList, speed = 1, scrollOffset = 96 }:
                 {cases.map((c, i) => (
                   <motion.button
                     key={c.id}
+                    style={i === cases.length - 1 && cases.length % 2 === 1 ? { gridColumn: "1 / -1" } : undefined}
                     type="button"
                     onClick={() => askKey(c.id as Key)}
                     initial={{ opacity: 0, y: 12 }}
